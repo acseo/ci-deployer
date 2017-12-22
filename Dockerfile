@@ -1,8 +1,8 @@
-FROM composer/composer:1.1-alpine
+FROM composer:latest
 
 LABEL maintainer "nicolas.potier@acseo.fr"
 
-RUN composer global require --dev deployer/deployer:4.3 deployer/recipes codeception/codeception
+RUN composer global require --dev deployer/deployer:6.0.5
 RUN apk --no-cache add openssh-client rsync
 
 ENTRYPOINT ["/bin/sh", "-c"]
