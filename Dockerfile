@@ -1,11 +1,8 @@
-FROM php:7-alpine
+FROM composer/composer:1.1-alpine
 
 LABEL maintainer "nicolas.potier@acseo.fr"
 
-RUN curl -LO https://deployer.org/deployer.phar \
-    && mv deployer.phar /usr/local/bin/dep \
-    && chmod +x /usr/local/bin/dep
-
+RUN composer global require --dev deployer/deployer:5.1.3 deployer/recipes codeception/codeception
 RUN apk --no-cache add openssh-client rsync
 
 ENTRYPOINT ["/bin/sh", "-c"]
