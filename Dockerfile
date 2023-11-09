@@ -1,19 +1,19 @@
-FROM php:7-alpine
+ARG         PHP_VERSION=8.2
 
-LABEL maintainer "nicolas.potier@acseo.fr"
+FROM        php:${PHP_VERSION}-alpine
 
-RUN         curl -LO https://deployer.org/releases/v6.6.0/deployer.phar \
-            && mv deployer.phar /usr/local/bin/dep \
-            && chmod +x /usr/local/bin/dep
+ARG         PHP_VERSION
 
+LABEL       maintainer="ACSEO <contact@acseo.fr>"
+
+# hadolint ignore=DL3018
 RUN         apk --no-cache add openssh-client rsync
 
 ENV         COMPOSER_HOME=/var/composer
-COPY        composer-install /tmp/composer-install
-RUN         chmod +x /tmp/composer-install
-RUN         /tmp/composer-install && \
-            rm /tmp/composer-install
+ENV         PATH=${COMPOSER_HOME}/vendor/bin:$PATH
+COPY        --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-RUN         composer global require deployer/recipes --dev
+ARG         DEPLOYER_VERSION=7.3
+RUN         composer global require deployer/deployer:${DEPLOYER_VERSION} --dev
 
 ENTRYPOINT  ["/bin/sh", "-c"]
